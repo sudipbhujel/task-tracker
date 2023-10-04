@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { UpdateTaskDto } from './dtos/update-task.dto';
 import { Task, TaskDocument } from './schemas/task.schema';
 import { TaskQueryDto } from './dtos/task-query.dto';
+import { OrderBy, SortBy } from '@/globals/enum';
 
 @Injectable()
 export class TaskService {
@@ -15,10 +16,19 @@ export class TaskService {
     return (await task.save())?.toObject();
   }
 
-  async findAll(where: TaskQueryDto): Promise<Task[]> {
-    return (await this.taskModel.find(where).exec()).map(
-      (item) => item?.toObject(),
-    );
+  async findAllOfUser(
+    where: TaskQueryDto,
+    userId: string,
+    sortBy?: SortBy,
+    orderBy?: OrderBy,
+  ): Promise<Task[]> {
+    console.log(sortBy, orderBy);
+    return (
+      await this.taskModel
+        .find({ ...where, isDeleted: false, userId })
+        .sort({ [sortBy]: orderBy })
+        .exec()
+    ).map((item) => item?.toObject());
   }
 
   async findOne(id: string) {

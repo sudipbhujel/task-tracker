@@ -9,3 +9,14 @@ export enum TaskDeadline {
   TODAY = 'TODAY',
   FUTURE = 'FUTURE',
 }
+
+export enum SortBy {
+  priority = 'priority',
+  deadline = 'deadline',
+  updatedAt = 'updatedAt',
+}
+
+export enum OrderBy {
+  desc = 'desc',
+  asc = 'asc',
+}

@@ -33,11 +33,13 @@ export class TaskController {
 
   @Get()
   async findAll(@Query() query: TaskQueryDto, @UserContext() user: User) {
-    const tasks = await this.taskService.findAll({
-      ...query,
-      userId: user.id,
-      isDeleted: false,
-    });
+    const { sortBy, orderBy, ...restQueries } = query;
+    const tasks = await this.taskService.findAllOfUser(
+      restQueries,
+      user.id,
+      sortBy,
+      orderBy,
+    );
 
     return tasks.map((task) => new TaskEntity(task));
   }

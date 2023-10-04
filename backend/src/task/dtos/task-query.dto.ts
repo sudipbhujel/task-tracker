@@ -1,4 +1,4 @@
-import { TaskDeadline, TaskPriority } from '@/globals/enum';
+import { OrderBy, SortBy, TaskDeadline, TaskPriority } from '@/globals/enum';
 import { BadRequestException } from '@nestjs/common';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
@@ -50,7 +50,21 @@ export class TaskQueryDto {
     $gte?: Date;
   };
 
-  userId: string;
+  @IsOptional()
+  @ApiPropertyOptional({
+    type: 'string',
+    enum: SortBy,
+    description: 'Sort By',
+  })
+  @IsEnum(SortBy)
+  sortBy?: SortBy;
 
-  isDeleted: boolean;
+  @IsOptional()
+  @ApiPropertyOptional({
+    type: 'string',
+    enum: OrderBy,
+    description: 'Order By',
+  })
+  @IsEnum(OrderBy)
+  orderBy?: OrderBy;
 }
