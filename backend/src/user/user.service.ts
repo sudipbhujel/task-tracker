@@ -14,10 +14,14 @@ export class UserService {
   }
 
   async findById(_id: string) {
-    return (await this.userModel.findOne({ _id }).exec())?.toObject();
+    return (
+      await this.userModel.findOne({ _id, isDeleted: false }).exec()
+    )?.toObject();
   }
 
   async findByEmail(email: string) {
-    return (await this.userModel.findOne({ email }).exec())?.toObject();
+    return (
+      await this.userModel.findOne({ email, isDeleted: false }).exec()
+    )?.toObject();
   }
 }

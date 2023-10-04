@@ -11,6 +11,18 @@ export class MeEntity implements Partial<UserDocument> {
   id: string;
 
   @Expose()
+  createdAt: Date;
+
+  @Expose()
+  updatedAt: Date;
+
+  @Expose()
+  deletedAt: Date | null;
+
+  @Expose()
+  isDeleted: boolean;
+
+  @Expose()
   firstName?: string;
 
   @Expose()

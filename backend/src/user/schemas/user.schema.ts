@@ -25,6 +25,12 @@ export type UserDocument = HydratedDocument<User>;
   },
 })
 export class User {
+  @Prop({ type: Date, default: null })
+  deletedAt: Date;
+
+  @Prop({ type: Boolean, default: false })
+  isDeleted: boolean;
+
   @Prop({ type: String, required: true })
   firstName: string;
 
