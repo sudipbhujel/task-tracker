@@ -16,6 +16,23 @@ type ITaskUpdateInput = Omit<
   deadline: Date | string;
 };
 
+type ITaskCreateInput = Omit<
+  components['schemas']['CreateTaskDto'],
+  'deadline'
+> & {
+  id: string;
+  deadline: Date | string;
+};
+
+export const useTaskCreateMutation = () =>
+  useMutation<TaskEntity, ApiErrorType, ITaskCreateInput>(
+    async (data: ITaskUpdateInput) => {
+      const res = await axiosInstance.post(`/task/${data.id}`, data);
+
+      return res.data;
+    },
+  );
+
 export const useTaskUpdateMutation = () =>
   useMutation<TaskEntity, ApiErrorType, ITaskUpdateInput>(
     async (data: ITaskUpdateInput) => {
@@ -24,3 +41,10 @@ export const useTaskUpdateMutation = () =>
       return res.data;
     },
   );
+
+export const useTaskDeleteMutation = () =>
+  useMutation(async (id: string) => {
+    const res = await axiosInstance.delete(`/task/${id}`);
+
+    return res.data;
+  });

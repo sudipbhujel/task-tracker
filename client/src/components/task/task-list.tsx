@@ -22,14 +22,15 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
-import { toast } from '../ui/use-toast';
-import TaskEditButton from './task-edit-button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
+import { toast } from '../ui/use-toast';
+import { TaskDeleteButton } from './task-delete-button';
+import TaskEditButton from './task-edit-button';
 
 interface TaskListProps {}
 type ITask = components['schemas']['TaskEntity'];
@@ -128,6 +129,7 @@ const TaskList: FC<TaskListProps> = () => {
               <SelectItem value="FUTURE">Future</SelectItem>
             </SelectContent>
           </Select>
+          <Button>Add Task</Button>
         </div>
       </div>
       {isLoading && <TaskListSkeleton />}
@@ -207,7 +209,7 @@ const TaskList: FC<TaskListProps> = () => {
               </div>
               <div className="flex space-x-2">
                 <TaskEditButton defaultValues={item} />
-                <Button variant="destructive">Delete</Button>
+                <TaskDeleteButton id={item.id} />
               </div>
             </div>
           );
