@@ -1,7 +1,13 @@
+import { useTaskUpdateMutation } from '@/hooks/api/task.hook';
 import axiosInstance from '@/lib/axios';
 import { cn } from '@/lib/utils';
 import { components } from '@/types';
-import { useQuery } from '@tanstack/react-query';
+import {
+  CheckCircledIcon,
+  CircleIcon,
+  CrossCircledIcon,
+} from '@radix-ui/react-icons';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import _ from 'lodash';
 import moment from 'moment';
 import { FC, useEffect } from 'react';
@@ -16,7 +22,14 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
+import { toast } from '../ui/use-toast';
 import TaskEditButton from './task-edit-button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/tooltip';
 
 interface TaskListProps {}
 type ITask = components['schemas']['TaskEntity'];
@@ -34,6 +47,8 @@ const TaskListSkeleton = () => {
 
 const TaskList: FC<TaskListProps> = () => {
   const [searchParam, setSearchParam] = useSearchParams();
+  const { mutate } = useTaskUpdateMutation();
+  const queryClient = useQueryClient();
 
   const search = [...searchParam.entries()].reduce(
     (acc, cur) => ({
@@ -116,44 +131,93 @@ const TaskList: FC<TaskListProps> = () => {
         </div>
       </div>
       {isLoading && <TaskListSkeleton />}
-      <TaskEditButton />
-      <div className="space-y-2 mt-2">
+      <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
         {data?.map((item) => {
           return (
             <div
               key={item.id}
-              className="flex flex-row items-center justify-between rounded-lg border p-2"
+              className="h-full flex flex-row items-center justify-between rounded-lg border p-2"
             >
-              <div className="">
-                <p className="text-base font-medium">{item.title}</p>
+              <div className="flex items-center">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="link"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          mutate(
+                            { ...item, isCompleted: !item.isCompleted },
+                            {
+                              onSuccess: () => {
+                                toast({
+                                  title: 'Success',
+                                  description: 'Task updated successfully',
+                                });
 
-                <div className="flex space-x-2 items-center">
+                                queryClient.invalidateQueries(['tasks']);
+                              },
+                            },
+                          );
+                        }}
+                      >
+                        {item.isCompleted ? (
+                          <CheckCircledIcon className="h-6 w-6" />
+                        ) : (
+                          <CircleIcon className="h-6 w-6" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {item.isCompleted
+                          ? 'Mark as incomplete'
+                          : 'Mark as complete'}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <div>
+                  <p className="text-base font-medium">{item.title}</p>
+                  <div className="flex space-x-2 items-center">
+                    <p className="text-sm text-muted-foreground">
+                      {moment(item.deadline).format('YYYY/MMM/DD hh:mm A')}
+                    </p>
+                    <Badge
+                      variant="outline"
+                      className={cn('text-white', {
+                        'text-red-500': item.priority === 'HIGH',
+                        'text-green-500': item.priority === 'MEDIUM',
+                        'text-blue-500': item.priority === 'LOW',
+                      })}
+                    >
+                      {item.priority}
+                    </Badge>
+                    {item.isCompleted ? (
+                      <CheckCircledIcon className="text-green-500" />
+                    ) : (
+                      <CrossCircledIcon className="text-red-500" />
+                    )}
+                  </div>
                   <p className="text-sm text-muted-foreground">
-                    {moment(item.deadline).format('YYYY/MMM/DD hh:mm A')}
+                    {item.description}
                   </p>
-                  <Badge
-                    variant="outline"
-                    className={cn('text-white', {
-                      'text-red-500': item.priority === 'HIGH',
-                      'text-green-500': item.priority === 'MEDIUM',
-                      'text-blue-500': item.priority === 'LOW',
-                    })}
-                  >
-                    {item.priority}
-                  </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {item.description}
-                </p>
               </div>
               <div className="flex space-x-2">
-                <Button>Edit </Button>
+                <TaskEditButton defaultValues={item} />
                 <Button variant="destructive">Delete</Button>
               </div>
             </div>
           );
         })}
       </div>
+      {!data?.length && !isLoading && (
+        <p className="text-sm text-muted-foreground text-center">
+          No tasks found
+        </p>
+      )}
     </section>
   );
 };
