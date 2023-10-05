@@ -2,6 +2,7 @@ import { useAuthContext } from '@/context/useAuthContext';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, buttonVariants } from '../ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 interface NavbarProps {}
 
@@ -11,18 +12,30 @@ const Navbar: FC<NavbarProps> = ({}) => {
   return (
     <nav className="flex justify-between items-center py-2">
       <h1 className="text-xl font-bold">Task Tracker</h1>
-      <div>
-        {!user && (
-          <Link to="/login" className={buttonVariants()}>
-            Login
-          </Link>
-        )}
-        {user && (
+
+      {!user && (
+        <Link to="/login" className={buttonVariants()}>
+          Login
+        </Link>
+      )}
+      {user && (
+        <div className="flex space-x-2">
           <Button variant="outline" onClick={logout}>
             Logout
           </Button>
-        )}
-      </div>
+          <div className="flex items-center space-x-1">
+            <Avatar>
+              <AvatarImage />
+              <AvatarFallback>
+                {user.firstName?.at(0) + '' + user.lastName?.at(0)}
+              </AvatarFallback>
+            </Avatar>
+            <p>
+              {user.firstName} {user.lastName}
+            </p>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
