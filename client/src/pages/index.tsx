@@ -5,7 +5,6 @@ import { FC } from 'react';
 const MainPage: FC = () => {
   const { user } = useAuthContext();
 
-  console.log('user = ', user);
   return <div>{user ? <TaskList /> : null}</div>;
 };
 

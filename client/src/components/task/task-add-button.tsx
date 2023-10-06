@@ -9,14 +9,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useTaskUpdateMutation } from '@/hooks/api/task.hook';
+import { useTaskCreateMutation } from '@/hooks/api/task.hook';
 import { cn } from '@/lib/utils';
-import { components } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Calendar } from '../ui/calendar';
@@ -32,59 +31,59 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { toast } from '../ui/use-toast';
 
-interface TaskEditButtonProps {
-  defaultValues: components['schemas']['TaskEntity'];
-}
+interface TaskAddButtonProps {}
 
 const formSchema = z.object({
-  id: z.string(),
   title: z.string(),
-  description: z.string(),
-  priority: z.enum(['HIGH', 'MEDIUM', 'LOW']),
+  description: z.string().optional(),
+  priority: z.enum(['HIGH', 'MEDIUM', 'LOW']).default('LOW'),
   deadline: z.date(),
-  isCompleted: z.boolean().optional(),
+  isCompleted: z.boolean().default(false),
 });
 
-export const TaskEditButton: FC<TaskEditButtonProps> = ({ defaultValues }) => {
+export const TaskAddButton: FC<TaskAddButtonProps> = () => {
+  const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ...defaultValues,
-      deadline: defaultValues?.deadline
-        ? new Date(defaultValues.deadline)
-        : undefined,
+      title: '',
+      description: '',
+      priority: 'LOW',
+      deadline: new Date(),
+      isCompleted: false,
     },
   });
 
   const queryClient = useQueryClient();
 
-  const { mutate } = useTaskUpdateMutation();
+  const { mutate } = useTaskCreateMutation();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     mutate(values, {
       onSuccess: () => {
         toast({
           title: 'Success',
-          description: 'Task updated successfully',
+          description: 'Task created successfully',
         });
 
         queryClient.invalidateQueries(['tasks']);
+        setOpen(false);
       },
     });
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Task</Button>
+        <Button aria-label="Add Task">Add Task</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Edit Task</DialogTitle>
+              <DialogTitle>Add Task</DialogTitle>
               <DialogDescription>
-                Make changes to your task. Click save when you're done.
+                Add task. Click save when you're done.
               </DialogDescription>
             </DialogHeader>
 
@@ -200,6 +199,12 @@ export const TaskEditButton: FC<TaskEditButtonProps> = ({ defaultValues }) => {
                           }
                           onSelect={field.onChange}
                           initialFocus
+                          disabled={(value) => {
+                            const newDate = new Date(value);
+                            newDate.setDate(newDate.getDate() + 1);
+
+                            return newDate < new Date();
+                          }}
                         />
                       </PopoverContent>
                     </Popover>
@@ -210,7 +215,7 @@ export const TaskEditButton: FC<TaskEditButtonProps> = ({ defaultValues }) => {
             </div>
 
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">Add</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -219,4 +224,4 @@ export const TaskEditButton: FC<TaskEditButtonProps> = ({ defaultValues }) => {
   );
 };
 
-export default TaskEditButton;
+export default TaskAddButton;

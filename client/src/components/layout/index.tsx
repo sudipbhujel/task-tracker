@@ -1,15 +1,22 @@
 import { FC } from 'react';
-import Navbar from '../navbar';
+import Helmet from 'react-helmet';
 import { Outlet } from 'react-router-dom';
+import Navbar from '../navbar';
 
 const Layout: FC = () => {
   return (
-    <main className="container mx-auto min-h-screen">
-      <Navbar />
-      <section className="">
-        <Outlet />
-      </section>
-    </main>
+    <>
+      <Helmet>
+        <title>Task Tracker</title>
+        <meta name="description" content="Task Prioritizer" />
+      </Helmet>
+      <main className="container mx-auto min-h-screen">
+        <Navbar />
+        <section className="">
+          <Outlet />
+        </section>
+      </main>
+    </>
   );
 };
 

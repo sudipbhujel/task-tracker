@@ -20,14 +20,13 @@ type ITaskCreateInput = Omit<
   components['schemas']['CreateTaskDto'],
   'deadline'
 > & {
-  id: string;
   deadline: Date | string;
 };
 
 export const useTaskCreateMutation = () =>
   useMutation<TaskEntity, ApiErrorType, ITaskCreateInput>(
-    async (data: ITaskUpdateInput) => {
-      const res = await axiosInstance.post(`/task/${data.id}`, data);
+    async (data: ITaskCreateInput) => {
+      const res = await axiosInstance.post(`/task`, data);
 
       return res.data;
     },

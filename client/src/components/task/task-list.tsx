@@ -6,6 +6,7 @@ import {
   CheckCircledIcon,
   CircleIcon,
   CrossCircledIcon,
+  MixerVerticalIcon,
 } from '@radix-ui/react-icons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import _ from 'lodash';
@@ -31,11 +32,16 @@ import {
 import { toast } from '../ui/use-toast';
 import { TaskDeleteButton } from './task-delete-button';
 import TaskEditButton from './task-edit-button';
+import TaskAddButton from './task-add-button';
 
 interface TaskListProps {}
 type ITask = components['schemas']['TaskEntity'];
 type IPriority = components['schemas']['CreateTaskDto']['priority'];
 type IDeadline = 'PAST' | 'TODAY' | 'FUTURE';
+// type ISortBy = 'priority' | 'deadline' | 'updatedAt';
+// type IOrderBy = 'asc' | 'desc';
+
+// const sortFields = ['priority', 'deadline', 'updatedAt'];
 
 const TaskListSkeleton = () => {
   return (
@@ -57,7 +63,7 @@ const TaskList: FC<TaskListProps> = () => {
       [cur[0]]: cur[1],
     }),
     {},
-  ) as { priority: string; deadline: string };
+  ) as { priority: string; deadline: string; sortBy: string; orderBy: string };
 
   const { data, refetch, isLoading } = useQuery({
     queryKey: ['tasks'],
@@ -79,10 +85,11 @@ const TaskList: FC<TaskListProps> = () => {
   }, [refetch, search]);
 
   return (
-    <section>
+    <section className="mt-2">
+      {/* Filters */}
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Tasks</h2>
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 items-center">
+          <h2 className="text-lg font-semibold">Tasks</h2>
           <Select
             value={search.priority}
             onValueChange={(_value) => {
@@ -96,7 +103,7 @@ const TaskList: FC<TaskListProps> = () => {
               }
             }}
           >
-            <SelectTrigger className="w-[120px]">
+            <SelectTrigger className="w-[120px]" aria-label="Priority">
               <SelectValue placeholder="Priority" />
             </SelectTrigger>
             <SelectContent>
@@ -119,7 +126,7 @@ const TaskList: FC<TaskListProps> = () => {
               }
             }}
           >
-            <SelectTrigger className="w-[120px]">
+            <SelectTrigger className="w-[120px]" aria-label="Deadline">
               <SelectValue placeholder="Deadline" />
             </SelectTrigger>
             <SelectContent>
@@ -129,11 +136,173 @@ const TaskList: FC<TaskListProps> = () => {
               <SelectItem value="FUTURE">Future</SelectItem>
             </SelectContent>
           </Select>
-          <Button>Add Task</Button>
+          <Button
+            variant="ghost"
+            className="space-x-1 items-center"
+            onClick={(e) => {
+              e.preventDefault();
+              setSearchParam({});
+            }}
+            aria-label="Clear filters"
+          >
+            <CrossCircledIcon />
+            <p>Clear filters</p>
+          </Button>
+        </div>
+        <div className="flex space-x-2">
+          {/* <Select
+            value={search.sortBy === 'priority' ? search.orderBy : undefined}
+            onValueChange={(value) => {
+              if (value)
+                setSearchParam({
+                  ...search,
+                  sortBy: 'priority',
+                  orderBy: value,
+                });
+            }}
+          >
+            <SelectTrigger className="w-[130px]">
+              <SelectValue
+                placeholder={
+                  <div className="flex space-x-1 items-center">
+                    <MixerVerticalIcon />
+                    <p>Priority</p>
+                  </div>
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="asc">Priority Asc</SelectItem>
+              <SelectItem value="desc">Priority Desc</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={search.sortBy === 'deadline' ? search.orderBy : undefined}
+            onValueChange={(_value) => {
+              const value = _value === 'ALL' ? undefined : (_value as IOrderBy);
+
+              if (value)
+                setSearchParam({
+                  ...search,
+                  sortBy: 'deadline',
+                  orderBy: value,
+                });
+              else {
+                const copy = { ...search };
+                setSearchParam({ ..._.omit(copy, ['sortBy', 'orderBy']) });
+              }
+            }}
+          >
+            <SelectTrigger className="w-[130px]">
+              <SelectValue
+                placeholder={
+                  <div className="flex space-x-1 items-center">
+                    <MixerVerticalIcon />
+                    <p>Deadline</p>
+                  </div>
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="asc">Deadline Asc</SelectItem>
+              <SelectItem value="desc">Deadline Desc</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={search.sortBy === 'updatedAt' ? search.orderBy : undefined}
+            onValueChange={(_value) => {
+              const value = _value === 'ALL' ? undefined : (_value as IOrderBy);
+
+              if (value)
+                setSearchParam({
+                  ...search,
+                  sortBy: 'updatedAt',
+                  orderBy: value,
+                });
+              else {
+                const copy = { ...search };
+                setSearchParam({ ..._.omit(copy, ['sortBy', 'orderBy']) });
+              }
+            }}
+          >
+            <SelectTrigger className="w-[130px]">
+              <SelectValue
+                placeholder={
+                  <div className="flex space-x-1 items-center">
+                    <MixerVerticalIcon />
+                    <p>Updated</p>
+                  </div>
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="asc">Updated Asc</SelectItem>
+              <SelectItem value="desc">Updated Desc</SelectItem>
+            </SelectContent>
+          </Select> */}
+
+          <Select
+            value={search.sortBy}
+            onValueChange={(value) => {
+              if (value)
+                setSearchParam({
+                  ...search,
+                  sortBy: value,
+                });
+            }}
+          >
+            <SelectTrigger className="w-[130px]" aria-label="Sort">
+              <SelectValue
+                placeholder={
+                  <div className="flex space-x-1 items-center">
+                    <MixerVerticalIcon />
+                    <p>Sort</p>
+                  </div>
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="priority">Priority</SelectItem>
+              <SelectItem value="deadline">Deadline</SelectItem>
+              <SelectItem value="updatedAt">Updated At</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={search.orderBy}
+            onValueChange={(value) => {
+              if (value)
+                setSearchParam({
+                  ...search,
+                  orderBy: value,
+                });
+            }}
+          >
+            <SelectTrigger className="w-[130px]" aria-label="Order">
+              <SelectValue
+                placeholder={
+                  <div className="flex space-x-1 items-center">
+                    <MixerVerticalIcon />
+                    <p>Order</p>
+                  </div>
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="asc">Ascending</SelectItem>
+              <SelectItem value="desc">Descending</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* <Button aria-label="Add Task">Add Task</Button> */}
+          <TaskAddButton />
         </div>
       </div>
       {isLoading && <TaskListSkeleton />}
-      <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+      {/* Tasks */}
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
         {data?.map((item) => {
           return (
             <div
@@ -162,6 +331,7 @@ const TaskList: FC<TaskListProps> = () => {
                             },
                           );
                         }}
+                        aria-label="Mark as complete"
                       >
                         {item.isCompleted ? (
                           <CheckCircledIcon className="h-6 w-6" />
