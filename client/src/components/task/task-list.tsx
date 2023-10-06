@@ -85,7 +85,7 @@ const TaskList: FC<TaskListProps> = () => {
   }, [refetch, search]);
 
   return (
-    <section className="mt-2">
+    <section className="mt-6">
       {/* Filters */}
       <div className="flex justify-between items-center">
         <div className="flex space-x-2 items-center">
@@ -150,99 +150,6 @@ const TaskList: FC<TaskListProps> = () => {
           </Button>
         </div>
         <div className="flex space-x-2">
-          {/* <Select
-            value={search.sortBy === 'priority' ? search.orderBy : undefined}
-            onValueChange={(value) => {
-              if (value)
-                setSearchParam({
-                  ...search,
-                  sortBy: 'priority',
-                  orderBy: value,
-                });
-            }}
-          >
-            <SelectTrigger className="w-[130px]">
-              <SelectValue
-                placeholder={
-                  <div className="flex space-x-1 items-center">
-                    <MixerVerticalIcon />
-                    <p>Priority</p>
-                  </div>
-                }
-              />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="asc">Priority Asc</SelectItem>
-              <SelectItem value="desc">Priority Desc</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={search.sortBy === 'deadline' ? search.orderBy : undefined}
-            onValueChange={(_value) => {
-              const value = _value === 'ALL' ? undefined : (_value as IOrderBy);
-
-              if (value)
-                setSearchParam({
-                  ...search,
-                  sortBy: 'deadline',
-                  orderBy: value,
-                });
-              else {
-                const copy = { ...search };
-                setSearchParam({ ..._.omit(copy, ['sortBy', 'orderBy']) });
-              }
-            }}
-          >
-            <SelectTrigger className="w-[130px]">
-              <SelectValue
-                placeholder={
-                  <div className="flex space-x-1 items-center">
-                    <MixerVerticalIcon />
-                    <p>Deadline</p>
-                  </div>
-                }
-              />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="asc">Deadline Asc</SelectItem>
-              <SelectItem value="desc">Deadline Desc</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={search.sortBy === 'updatedAt' ? search.orderBy : undefined}
-            onValueChange={(_value) => {
-              const value = _value === 'ALL' ? undefined : (_value as IOrderBy);
-
-              if (value)
-                setSearchParam({
-                  ...search,
-                  sortBy: 'updatedAt',
-                  orderBy: value,
-                });
-              else {
-                const copy = { ...search };
-                setSearchParam({ ..._.omit(copy, ['sortBy', 'orderBy']) });
-              }
-            }}
-          >
-            <SelectTrigger className="w-[130px]">
-              <SelectValue
-                placeholder={
-                  <div className="flex space-x-1 items-center">
-                    <MixerVerticalIcon />
-                    <p>Updated</p>
-                  </div>
-                }
-              />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="asc">Updated Asc</SelectItem>
-              <SelectItem value="desc">Updated Desc</SelectItem>
-            </SelectContent>
-          </Select> */}
-
           <Select
             value={search.sortBy}
             onValueChange={(value) => {
