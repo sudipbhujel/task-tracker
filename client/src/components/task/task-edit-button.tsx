@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CalendarIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Calendar } from '../ui/calendar';
@@ -46,6 +46,7 @@ const formSchema = z.object({
 });
 
 export const TaskEditButton: FC<TaskEditButtonProps> = ({ defaultValues }) => {
+  const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,12 +70,13 @@ export const TaskEditButton: FC<TaskEditButtonProps> = ({ defaultValues }) => {
         });
 
         queryClient.invalidateQueries(['tasks']);
+        setOpen(false);
       },
     });
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="space-x-2" aria-label="Edit Task">
           <Pencil1Icon className="w-5 h-5" />

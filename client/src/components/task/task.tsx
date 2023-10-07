@@ -79,10 +79,10 @@ const Task: FC<TaskProps> = ({ item }) => {
             </p>
             <Badge
               variant="outline"
-              className={cn('text-white', {
+              className={cn({
                 'text-red-500': item.priority === 'HIGH',
-                'text-green-500': item.priority === 'MEDIUM',
-                'text-blue-500': item.priority === 'LOW',
+                'text-orange-500': item.priority === 'MEDIUM',
+                'text-green-500': item.priority === 'LOW',
               })}
             >
               {item.priority}
