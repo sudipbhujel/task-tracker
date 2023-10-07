@@ -8,6 +8,13 @@ export class TaskQueryDto {
   @IsOptional()
   @ApiPropertyOptional({
     type: 'string',
+    description: 'Query',
+  })
+  q?: string;
+
+  @IsOptional()
+  @ApiPropertyOptional({
+    type: 'string',
     enum: TaskPriority,
     description: 'Task priority',
   })

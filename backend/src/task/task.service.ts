@@ -24,6 +24,7 @@ export class TaskService {
   ): Promise<Task[]> {
     sortBy = sortBy || SortBy.updatedAt;
     orderBy = orderBy || OrderBy.desc;
+
     return (
       await this.taskModel
         .find({ ...where, isDeleted: false, userId })

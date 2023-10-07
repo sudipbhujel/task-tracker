@@ -13,7 +13,7 @@ import { useTaskUpdateMutation } from '@/hooks/api/task.hook';
 import { cn } from '@/lib/utils';
 import { components } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CalendarIcon } from '@radix-ui/react-icons';
+import { CalendarIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { FC } from 'react';
@@ -76,7 +76,10 @@ export const TaskEditButton: FC<TaskEditButtonProps> = ({ defaultValues }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Task</Button>
+        <Button variant="outline" className="space-x-2" aria-label="Edit Task">
+          <Pencil1Icon className="w-5 h-5" />
+          <p className="hidden sm:block">Edit</p>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>

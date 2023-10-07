@@ -13,6 +13,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { useTaskDeleteMutation } from '@/hooks/api/task.hook';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '../ui/use-toast';
+import { TrashIcon } from '@radix-ui/react-icons';
 
 export function TaskDeleteButton({ id }: { id: string }) {
   const queryClient = useQueryClient();
@@ -21,7 +22,10 @@ export function TaskDeleteButton({ id }: { id: string }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">Delete</Button>
+        <Button variant="destructive" className="space-x-2" aria-label="Delete">
+          <TrashIcon className="w-5 h-5" />
+          <p className="hidden sm:block">Delete</p>
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

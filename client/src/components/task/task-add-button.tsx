@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { useTaskCreateMutation } from '@/hooks/api/task.hook';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CalendarIcon } from '@radix-ui/react-icons';
+import { CalendarIcon, PlusCircledIcon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
@@ -75,7 +75,10 @@ export const TaskAddButton: FC<TaskAddButtonProps> = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button aria-label="Add Task">Add Task</Button>
+        <Button className="space-x-2" aria-label="Add Task">
+          <PlusCircledIcon className="w-5 h-5" />
+          <p className="hidden sm:block">Add Task</p>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>

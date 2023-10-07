@@ -11,8 +11,9 @@ import {
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import _ from 'lodash';
 import moment from 'moment';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useDebounce } from 'use-debounce';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import {
@@ -33,6 +34,7 @@ import { toast } from '../ui/use-toast';
 import { TaskDeleteButton } from './task-delete-button';
 import TaskEditButton from './task-edit-button';
 import TaskAddButton from './task-add-button';
+import { Input } from '../ui/input';
 
 interface TaskListProps {}
 type ITask = components['schemas']['TaskEntity'];
@@ -53,6 +55,9 @@ const TaskListSkeleton = () => {
 };
 
 const TaskList: FC<TaskListProps> = () => {
+  const [searchText, setSearchText] = useState('');
+  const [debouncedValue] = useDebounce(searchText, 500);
+
   const [searchParam, setSearchParam] = useSearchParams();
   const { mutate } = useTaskUpdateMutation();
   const queryClient = useQueryClient();
@@ -63,7 +68,13 @@ const TaskList: FC<TaskListProps> = () => {
       [cur[0]]: cur[1],
     }),
     {},
-  ) as { priority: string; deadline: string; sortBy: string; orderBy: string };
+  ) as {
+    q: string;
+    priority: string;
+    deadline: string;
+    sortBy: string;
+    orderBy: string;
+  };
 
   const { data, refetch, isLoading } = useQuery({
     queryKey: ['tasks'],
@@ -76,20 +87,50 @@ const TaskList: FC<TaskListProps> = () => {
 
       return res.data as ITask[];
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
+  // First set search text from query
+  useEffect(() => {
+    if (search.q) {
+      setSearchText(search.q);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Refetch query if search changes
   useEffect(() => {
     if (search) {
       refetch();
     }
   }, [refetch, search]);
 
+  // Set debounced value in search text `q` params
+  useEffect(() => {
+    if (debouncedValue) {
+      setSearchParam({ ...search, q: debouncedValue });
+    } else {
+      const copy = { ...search };
+      setSearchParam({ ..._.omit(copy, 'q') });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedValue, setSearchParam]);
+
   return (
     <section className="mt-6">
       {/* Filters */}
-      <div className="flex justify-between items-center">
+      <div className="grid grid-cols-1 gap-2 sm:gap-0 sm:grid-cols-2 sm:justify-items-end">
         <div className="flex space-x-2 items-center">
           <h2 className="text-lg font-semibold">Tasks</h2>
+          <Input
+            value={searchText}
+            type="text"
+            placeholder="Search"
+            onChange={(e) => {
+              setSearchText(e.target.value);
+            }}
+          />
           <Select
             value={search.priority}
             onValueChange={(_value) => {
@@ -145,8 +186,8 @@ const TaskList: FC<TaskListProps> = () => {
             }}
             aria-label="Clear filters"
           >
-            <CrossCircledIcon />
-            <p>Clear filters</p>
+            <CrossCircledIcon className="w-5 h-5" />
+            <p className="hidden sm:block">Clear&nbsp;filters</p>
           </Button>
         </div>
         <div className="flex space-x-2">

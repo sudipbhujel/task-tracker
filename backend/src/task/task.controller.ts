@@ -33,9 +33,20 @@ export class TaskController {
 
   @Get()
   async findAll(@Query() query: TaskQueryDto, @UserContext() user: User) {
-    const { sortBy, orderBy, ...restQueries } = query;
+    const { sortBy, orderBy, q, ...restQueries } = query;
+
+    const where = q
+      ? {
+          $or: [
+            { title: { $regex: q, $options: 'i' } },
+            { description: { $regex: q, $options: 'i' } },
+          ],
+          ...restQueries,
+        }
+      : restQueries;
+
     const tasks = await this.taskService.findAllOfUser(
-      restQueries,
+      where,
       user.id,
       sortBy,
       orderBy,
