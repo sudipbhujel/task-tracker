@@ -65,7 +65,7 @@ COPY pnpm-lock.yaml .
 
 RUN npm install -g pnpm
 
-RUN pnpm install --only=production
+RUN pnpm install
 
 COPY . .
 
