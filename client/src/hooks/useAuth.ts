@@ -17,6 +17,16 @@ export const useAuth = () => {
   const { getItem, setItem, removeItem } = useLocalStorage();
   const { toast } = useToast();
 
+  // Register mutation
+  const { mutate: registerMutate } = useMutation(
+    ['register'],
+    async ({ data }: { data: components['schemas']['RegisterUserDto'] }) => {
+      const res = await axiosInstance.post('/auth/register', data);
+
+      return res.data;
+    },
+  );
+
   // Login mutation
   const { mutate: loginMutate } = useMutation(
     ['login'],
@@ -99,5 +109,28 @@ export const useAuth = () => {
     });
   };
 
-  return { user, login, logout };
+  const register = (data: components['schemas']['RegisterUserDto']) => {
+    registerMutate(
+      { data },
+      {
+        onSuccess: () => {
+          navigate('/login');
+          toast({
+            title: 'Success',
+            description: 'Registered successfully',
+          });
+        },
+        onError: (err) => {
+          toast({
+            title: 'Error',
+            description: (err as AxiosError<ErrorResponse>).response?.data
+              ?.message,
+            variant: 'destructive',
+          });
+        },
+      },
+    );
+  };
+
+  return { user, register, login, logout };
 };

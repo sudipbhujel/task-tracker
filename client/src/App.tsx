@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { useAuthContext } from './context/useAuthContext';
 import MainPage from './pages';
 import LoginPage from './pages/login';
+import RegisterPage from './pages/register';
 
 const ProtectedRoute = ({
   element,
@@ -30,6 +31,7 @@ function App() {
         <Route path="/" Component={Layout}>
           <Route index element={<MainPage />} />
           <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
         </Route>
       </Routes>
     </AuthProvider>

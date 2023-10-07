@@ -13,17 +13,23 @@ const Navbar: FC<NavbarProps> = () => {
   return (
     <>
       <nav className="flex justify-between items-center py-1">
-        {/* <h1 className="text-xl font-bold">Task Tracker</h1> */}
-        {/* <img src="logo.png" alt="Logo" className="h-8 w-8 scale-150" /> */}
-        <div className="flex space-x-1 items-center">
+        <Link to="/" className="flex space-x-1 items-center">
           <ReaderIcon className="h-6 w-6" />
           <p>Task Tracker</p>
-        </div>
+        </Link>
 
         {!user && (
-          <Link to="/login" className={buttonVariants()}>
-            Login
-          </Link>
+          <div className="flex space-x-2">
+            <Link
+              to="/login"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              Login
+            </Link>
+            <Link to="/register" className={buttonVariants()}>
+              Register
+            </Link>
+          </div>
         )}
         {user && (
           <div className="flex space-x-2">

@@ -23,30 +23,34 @@ import { useForm } from 'react-hook-form';
 import { Link, Navigate } from 'react-router-dom';
 import * as z from 'zod';
 
-interface LoginPageProps {}
+interface RegisterPageProps {}
 
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
+  firstName: z.string(),
+  lastName: z.string(),
 });
 
-const LoginPage: FC<LoginPageProps> = () => {
+const RegisterPage: FC<RegisterPageProps> = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
       password: '',
+      firstName: '',
+      lastName: '',
     },
   });
 
-  const { login, user } = useAuthContext();
+  const { register, user } = useAuthContext();
 
   if (user) {
     return <Navigate to="/" />;
   }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    login(values);
+    register(values);
   }
 
   return (
@@ -56,9 +60,35 @@ const LoginPage: FC<LoginPageProps> = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <Card className="w-[400px]">
               <CardHeader>
-                <CardTitle className="text-center">Login</CardTitle>
+                <CardTitle className="text-center">Register</CardTitle>
               </CardHeader>
               <CardContent>
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="First name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Last name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="email"
@@ -95,10 +125,10 @@ const LoginPage: FC<LoginPageProps> = () => {
                   Submit
                 </Button>
                 <Link
-                  to="/register"
+                  to="/login"
                   className={buttonVariants({ variant: 'link' })}
                 >
-                  Don&apos;t have an account?
+                  Already have an account?
                 </Link>
               </CardFooter>
             </Card>
@@ -109,4 +139,4 @@ const LoginPage: FC<LoginPageProps> = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
