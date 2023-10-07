@@ -92,7 +92,7 @@ const TaskList: FC<TaskListProps> = () => {
   return (
     <section className="mt-6">
       {/* Filters */}
-      <div className="grid grid-cols-1 gap-2 sm:gap-0 sm:grid-cols-2 sm:justify-items-end">
+      <div className="flex gap-2 sm:gap-0 justify-between flex-col sm:flex-row">
         <div className="flex space-x-2 items-center">
           <h2 className="text-lg font-semibold">Tasks</h2>
           <Input
