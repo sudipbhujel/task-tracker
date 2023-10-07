@@ -92,8 +92,8 @@ const TaskList: FC<TaskListProps> = () => {
   return (
     <section className="mt-6">
       {/* Filters */}
-      <div className="flex gap-2 sm:gap-0 justify-between flex-col sm:flex-row">
-        <div className="flex space-x-2 items-center">
+      <div className="flex gap-2 justify-between flex-col sm:flex-row flex-wrap">
+        <div className="flex items-center flex-wrap gap-2">
           <h2 className="text-lg font-semibold">Tasks</h2>
           <Input
             value={searchText}
@@ -102,6 +102,7 @@ const TaskList: FC<TaskListProps> = () => {
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
+            className="w-[100px] sm:w-[120px]"
           />
           <Select
             value={search.priority}
@@ -116,7 +117,10 @@ const TaskList: FC<TaskListProps> = () => {
               }
             }}
           >
-            <SelectTrigger className="w-[120px]" aria-label="Priority">
+            <SelectTrigger
+              className="w-[90px] sm:w-[120px]"
+              aria-label="Priority"
+            >
               <SelectValue placeholder="Priority" />
             </SelectTrigger>
             <SelectContent>
@@ -139,7 +143,10 @@ const TaskList: FC<TaskListProps> = () => {
               }
             }}
           >
-            <SelectTrigger className="w-[120px]" aria-label="Deadline">
+            <SelectTrigger
+              className="w-[100px] sm:w-[120px]"
+              aria-label="Deadline"
+            >
               <SelectValue placeholder="Deadline" />
             </SelectTrigger>
             <SelectContent>
@@ -162,7 +169,7 @@ const TaskList: FC<TaskListProps> = () => {
             <p className="hidden sm:block">Clear&nbsp;filters</p>
           </Button>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex gap-2 flex-wrap">
           <Select
             value={search.sortBy}
             onValueChange={(value) => {
@@ -222,7 +229,7 @@ const TaskList: FC<TaskListProps> = () => {
       </div>
       {isLoading && <TaskListSkeleton />}
       {/* Tasks */}
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+      <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-3 flex-wrap w-full">
         {data?.map((item) => <Task key={item.id} item={item} />)}
       </div>
       {!data?.length && !isLoading && (

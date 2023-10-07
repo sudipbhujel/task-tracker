@@ -77,7 +77,7 @@ export const TaskAddButton: FC<TaskAddButtonProps> = () => {
       <DialogTrigger asChild>
         <Button className="space-x-2" aria-label="Add Task">
           <PlusCircledIcon className="w-5 h-5" />
-          <p className="hidden sm:block">Add Task</p>
+          <p className="hidden sm:block">Add</p>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

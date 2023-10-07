@@ -30,9 +30,9 @@ const Task: FC<TaskProps> = ({ item }) => {
   return (
     <div
       key={item.id}
-      className="h-full flex flex-row items-center justify-between rounded-lg border p-2"
+      className="h-full flex flex-row items-center justify-between rounded-lg border p-2 flex-wrap gap-1"
     >
-      <div className="flex items-center">
+      <div className="flex items-center ">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
