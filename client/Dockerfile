@@ -36,8 +36,10 @@ RUN set -x \
   && apk upgrade
 
 ARG NODE_ENV=production
+ARG VITE_APP_API_URL
 
 ENV NODE_ENV=${NODE_ENV}
+ENV VITE_APP_API_URL=${VITE_APP_API_URL}
 
 WORKDIR /usr/src/app
 
