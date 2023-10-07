@@ -1,23 +1,16 @@
-import { NestFactory, Reflector } from '@nestjs/core';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AppModule } from './app.module';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import helmet from 'helmet';
-import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import {
-  ClassSerializerInterceptor,
-  Logger,
-  ValidationPipe,
-} from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import { AppModule } from './app.module';
+import { MongoExceptionFilter } from './filters/mongoose-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
-  const logger = new Logger('Main');
-
-  logger.log('Config= ', configService.get('MONGO_URI'));
-  console.log('Config= ', configService.get('PORT'));
 
   app.setGlobalPrefix('api');
 
@@ -63,6 +56,8 @@ async function bootstrap() {
       strategy: 'exposeAll',
     }),
   );
+
+  app.useGlobalFilters(new MongoExceptionFilter());
 
   const config = new DocumentBuilder()
     .setTitle('Example API')
