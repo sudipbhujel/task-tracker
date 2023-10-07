@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:6
+    restart: always
+    command: [--auth]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: task
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: password
+    ports:
+      - 27017:27017
+    volumes:
+      - ./docker-entrypoint-initdb.d/mongo-entrypoint.sh:/docker-entrypoint-initdb.d/mongo-entrypoint.sh:ro
+      - dd:/data/db
+
+  backend:
+    container_name: backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      - MONGO_URI=mongodb://admin:password@mongodb:27017/
+      - MONGO_DBNAME=task
+    build:
+      context: ./backend
+      target: development
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    command: pnpm run start:dev
+    volumes:
+      - ./backend:/usr/src/app
+      # Mount the node_modules folder to speed up the build process
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb
+
+  client:
+    container_name: client
+    env_file:
+      - ./client/.env
+    depends_on:
+      - backend
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: development
+
+    command: pnpm run dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/usr/src/app
+       # Mount the node_modules folder to speed up the build process
+      - /usr/src/app/node_modules
+
+volumes:
+  dd:

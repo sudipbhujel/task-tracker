@@ -1,24 +1,23 @@
 import Layout from '@/components/layout';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { useAuthContext } from './context/useAuthContext';
 import MainPage from './pages';
 import LoginPage from './pages/login';
 import RegisterPage from './pages/register';
 
-const ProtectedRoute = ({
-  element,
-}: {
-  element: React.ReactElement | null;
-}) => {
-  const { user } = useAuthContext();
+// const ProtectedRoute = ({
+//   element,
+// }: {
+//   element: React.ReactElement | null;
+// }) => {
+//   const { user } = useAuthContext();
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+//   if (!user) {
+//     return <Navigate to="/login" replace />;
+//   }
 
-  return element;
-};
+//   return element;
+// };
 
 function App() {
   return (

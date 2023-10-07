@@ -1,10 +1,11 @@
 import { useAuth } from '@/hooks/useAuth';
-import { createContext } from 'react';
-import { User } from '../hooks/useUser';
 import { components } from '@/types';
+import { createContext } from 'react';
+
+type IUser = components['schemas']['MeEntity'];
 
 interface AuthContext {
-  user: User | null;
+  user: IUser | null;
   register: (data: components['schemas']['RegisterUserDto']) => void;
   login: (data: { email: string; password: string }) => void;
   logout: () => void;

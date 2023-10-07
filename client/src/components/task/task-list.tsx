@@ -223,7 +223,7 @@ const TaskList: FC<TaskListProps> = () => {
       {isLoading && <TaskListSkeleton />}
       {/* Tasks */}
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
-        {data?.map((item) => <Task item={item} />)}
+        {data?.map((item) => <Task key={item.id} item={item} />)}
       </div>
       {!data?.length && !isLoading && (
         <p className="text-sm text-muted-foreground text-center">

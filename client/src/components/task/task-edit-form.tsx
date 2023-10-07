@@ -30,7 +30,7 @@ const TaskEditForm: FC<TaskEditFormProps> = () => {
     },
   });
 
-  const { login, user } = useAuthContext();
+  const { login } = useAuthContext();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     login(values);

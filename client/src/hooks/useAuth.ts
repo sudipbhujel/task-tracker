@@ -77,6 +77,7 @@ export const useAuth = () => {
           });
         },
         onError: (err) => {
+          console.log(err);
           toast({
             title: 'Error',
             description: (err as AxiosError<ErrorResponse>).response?.data

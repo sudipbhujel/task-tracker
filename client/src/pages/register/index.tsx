@@ -28,8 +28,8 @@ interface RegisterPageProps {}
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-  firstName: z.string(),
-  lastName: z.string(),
+  firstName: z.string({ required_error: 'First name is required' }),
+  lastName: z.string({ required_error: 'Last name is required' }),
 });
 
 const RegisterPage: FC<RegisterPageProps> = () => {
@@ -38,8 +38,6 @@ const RegisterPage: FC<RegisterPageProps> = () => {
     defaultValues: {
       email: '',
       password: '',
-      firstName: '',
-      lastName: '',
     },
   });
 

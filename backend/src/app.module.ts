@@ -12,6 +12,7 @@ import { TaskModule } from './task/task.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get('MONGO_URI'),
+        dbName: configService.get('MONGO_DBNAME'),
       }),
       inject: [ConfigService],
     }),
@@ -20,6 +21,7 @@ import { TaskModule } from './task/task.module';
       validationSchema: Joi.object({
         PORT: Joi.number().default(4000),
         MONGO_URI: Joi.string().required(),
+        MONGO_DBNAME: Joi.string().required(),
         NODE_ENV: Joi.string().default('development'),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION_TIME: Joi.string().required(),
