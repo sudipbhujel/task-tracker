@@ -23,25 +23,6 @@ COPY . .
 
 CMD ["pnpm", "run", "dev"]
 
-FROM node:18-alpine as builder
-
-ARG VITE_APP_API_URL
-
-ENV VITE_APP_API_URL=${VITE_APP_API_URL}
-
-WORKDIR /usr/src/app
-
-COPY package.json .
-COPY pnpm-lock.yaml .
-
-RUN npm install -g pnpm
-
-RUN pnpm install
-
-COPY . .
-
-RUN pnpm run build
-
 FROM node:18-alpine as production
 
 # Add time zone
@@ -69,6 +50,6 @@ RUN pnpm install
 
 COPY . .
 
-COPY --from=builder /usr/src/app/dist ./dist
+RUN pnpm run build
 
 CMD ["pnpm", "run", "preview"]
