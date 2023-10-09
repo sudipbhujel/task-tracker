@@ -78,3 +78,8 @@ You can run this application by two methods, with docker and without docker.
   ```bash
   pnpm run dev
   ```
+
+## Rooms for Improvements
+
+- We can implement optimistic update in react using the features of `@tanstack/react-query` like cancel query
+- Task notifications or reminders for approaching deadlines using `cron` jobs, send notification through `socket` and use `socket` in frontend to consume server sent payload
