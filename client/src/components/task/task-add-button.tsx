@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CalendarIcon, PlusCircledIcon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
+import { addMinutes, format } from 'date-fns';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -186,7 +186,7 @@ export const TaskAddButton: FC<TaskAddButtonProps> = () => {
                             )}
                           >
                             {field.value ? (
-                              format(new Date(field.value), 'PPP')
+                              format(new Date(field.value), 'PPP HH:mm a')
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -209,6 +209,26 @@ export const TaskAddButton: FC<TaskAddButtonProps> = () => {
                             return newDate < new Date();
                           }}
                         />
+                        <div className="mx-5 mb-2">
+                          <input
+                            type="time"
+                            defaultValue={format(
+                              addMinutes(new Date(), 15),
+                              'HH:mm',
+                            )}
+                            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            onChange={(e) => {
+                              const [hours, minutes] = e.target.value
+                                .split(':')
+                                .map((value) => parseInt(value, 10));
+
+                              const date = new Date(field.value);
+
+                              date.setHours(hours, minutes);
+                              form.setValue('deadline', date);
+                            }}
+                          />
+                        </div>
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
