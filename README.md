@@ -16,6 +16,11 @@ _note: the application is deployed in https://railway.app_
 
 - Dockerize both backend and client application and setup docker-compose file
 - Used conventional commits styled git commit message
+- Best Lighthouse Report:
+  - Performance: 93
+  - Accessibility: 97
+  - Best Practice: 92
+  - SEO: 100
 
 **Backend**
 
@@ -35,6 +40,7 @@ _note: the application is deployed in https://railway.app_
 1. Use of filter, sorting and persist these state in query
 1. React query to fetch, mutate and communication with rest api
 1. User registration, login flow
+1. React helmet for SEO
 
 ## Run application
 
