@@ -15,6 +15,7 @@ _note: the application is deployed in https://railway.app_
 ## Features
 
 - Dockerize both backend and client application and setup docker-compose file
+- Used conventional commits styled git commit message
 
 **Backend**
 
@@ -41,14 +42,16 @@ You can run this application by two methods, with docker and without docker.
 
 **With docker**
 
-```bash
-docker compose up
-```
+- Navigate to root folder
+  ```bash
+  docker compose up
+  ```
 
 **Without Docker**
 
 ### Backend
 
+- Navigate to `backend` folder
 - Install dependencies
   ```bash
   pnpm i
@@ -63,6 +66,7 @@ docker compose up
 
 ### Client
 
+- Navigate to `client` folder
 - Install dependencies
   ```bash
   pnpm i
